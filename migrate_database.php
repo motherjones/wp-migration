@@ -12,7 +12,6 @@ $FILEDIR = "";
 $d6 = new PDO("mysql:host=$hostname;dbname=$d6_db", $username, $password);
 
 $wp = new PDO("mysql:host=$hostname;dbname=$wp_db", $username, $password);
-/*
 
 //truncate term tables
 $wp->beginTransaction();
@@ -939,7 +938,6 @@ while ( $meta = $meta_data->fetch(PDO::FETCH_ASSOC)) {
 $wp->commit();
 
 echo "posts done";
-*/
 
 /*begin author migration */
 $wp->beginTransaction();
@@ -1361,7 +1359,6 @@ $wp->commit();
 echo "authors done";
 
 
-return;
 /* end author data */
 
 
