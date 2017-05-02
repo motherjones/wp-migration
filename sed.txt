@@ -1,0 +1,1 @@
+ sed -i '' -e 's/dev-mjwordpress.pantheonsite.io/mjwp.dev/g' mjwp.sql
