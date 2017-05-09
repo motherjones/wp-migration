@@ -1187,7 +1187,6 @@ WHERE term_taxonomy_id=?
 $wp->beginTransaction();
 
 foreach ($name_to_tax_id as $name => $tax_id) {
-	print $tax_id . "\n";
     $byline_count_update->execute(Array($tax_id, $tax_id));
 }
 $wp->commit();
