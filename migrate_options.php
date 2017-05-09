@@ -92,7 +92,6 @@ $active_plugins = Array(
   'co-authors-plus/co-authors-plus.php',
   'redirection/redirection.php',
   'zoninator/zoninator.php',
-  'disqus-conditional-load/disqus-conditional-load.php',
   'fb-instant-articles/facebook-instant-articles.php',
 );
 $wp->beginTransaction();
