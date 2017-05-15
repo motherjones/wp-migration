@@ -1047,6 +1047,12 @@ $wp->beginTransaction();
 foreach ( $uid_to_author_meta as $uid => $author ) {
   $uiid = $uid;
 
+  if (array_key_exists('title', $author)) {
+	  $key = "nickname";
+	  $value = $author['title'] . ' the Gozerian';
+	  $author_meta_insert->execute();
+  }
+
   if (array_key_exists('field_twitter_user_value', $author)) {
     $key = "mj_user_twitter";
     $value = $author['field_twitter_user_value'];
