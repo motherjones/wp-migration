@@ -978,12 +978,13 @@ $author_data->execute();
 
 $author_insert = $wp->prepare('
 INSERT IGNORE INTO pantheon_wp.wp_users
-(user_nicename, user_login, user_registered, display_name)
+(user_nicename, user_login, user_registered, display_name, user_email)
 VALUES (
   REPLACE(LOWER(?), " ", "-"), # NICENAME lowercase, - instead of space
   REPLACE(LOWER(?), " ", ""), # login lowercase, no spaces
   FROM_UNIXTIME("1970-1-1 00:00:00"),
-  ? # Display name
+  ?, # Display name
+  ?  # email
 )
 ');
 
@@ -995,7 +996,8 @@ while ( $author = $author_data->fetch(PDO::FETCH_ASSOC)) {
   $author_insert->execute(Array(
     $author['title'],
     $author['title'],
-    $author['title']
+    $author['title'],
+    $author['mail']
   ));
   $uid_to_author_meta[$wp->lastInsertId()] = $author;
   $author['wp_id'] = $wp->lastInsertId();
@@ -1005,7 +1007,8 @@ $wp->commit();
 
 $roles_data = $d6->prepare("
 SELECT DISTINCT
-u.name
+u.name,
+u.mail
 FROM mjd6.users u
 INNER JOIN mjd6.users_roles r
 USING (uid)
@@ -1021,7 +1024,8 @@ while ( $author = $roles_data->fetch(PDO::FETCH_ASSOC)) {
   $author_insert->execute(Array(
     $author['name'],
     $author['name'],
-    $author['name']
+    $author['name'],
+    $author['mail']
   ));
   $author['wp_id'] = $wp->lastInsertId();
   $author_name_to_author_meta[$author['name']] = $author;
