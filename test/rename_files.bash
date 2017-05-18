@@ -4,5 +4,5 @@
 for file in "$@"
 do
 	fileto=`php sanitize_file.php "$file"`
-	mv $file $fileto
+	mv "$file" "$fileto"
 done
