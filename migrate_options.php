@@ -93,6 +93,7 @@ $active_plugins = Array(
   'redirection/redirection.php',
   'zoninator/zoninator.php',
   'fb-instant-articles/facebook-instant-articles.php',
+  'WPCOM-Legacy-Redirector/wpcom-legacy-redirector.php',
 );
 $wp->beginTransaction();
 

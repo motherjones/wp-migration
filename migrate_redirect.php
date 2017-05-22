@@ -30,18 +30,17 @@ VALUES (
 FROM_UNIXTIME("1970-1-1 00:00:00"),
 CONVERT_TZ(FROM_UNIXTIME("1970-1-1 00:00:00"), "PST8PDT","UTC"),
 "",
-"",
-"Auto Draft"
-"",
-:post_name,
+:post_title, #from not hashed
+:post_excerpt, # to url
+:post_name, #from hashed md5
 "",
 "",
 FROM_UNIXTIME("1970-1-1 00:00:00"),
 CONVERT_TZ(FROM_UNIXTIME("1970-1-1 00:00:00"), "PST8PDT","UTC"),
 "",
-"redirect_rule",
+"vip-legacy-redirect",
 "publish",
-NULL,
+:post_parent, # to as post id
 ""
 )
 ;
@@ -52,9 +51,11 @@ $redirects = Array();
 $wp->beginTransaction();
 while ( $redirect = $legacy_redirects->fetch(PDO::FETCH_ASSOC)) {
 	$redirect_post_insert->execute(Array(
-		"post_name" => $redirect['src']
+		"post_name" => md5('/' . $redirect['src']),
+		"post_title" => '/' . $redirect['src'],
+		"post_parent" => null,
+		"post_excerpt" => '/' . $redirect['dst'],
 	));
-	$redirects[$wp->lastInsertId()] = $redirect;
 }
 $wp->commit();
 
@@ -70,12 +71,11 @@ $manual_redirects->execute();
 $wp->beginTransaction();
 while ( $redirect = $manual_redirects->fetch(PDO::FETCH_ASSOC)) {
 	$redirect_post_insert->execute(Array(
-		"post_name" => $redirect['source']
+		"post_name" => md5('/' . $redirect['source']),
+		"post_title" => '/' . $redirect['source'],
+		"post_parent" => null,
+		"post_excerpt" => '/' . $redirect['redirect'],
 	));
-	$redirects[$wp->lastInsertId()] = Array( 
-		'src' => $redirect['source'],
-		'dst' => $redirect['redirect']
-	);
 }
 $wp->commit();
 
@@ -105,12 +105,11 @@ $page_redirects->execute();
 $wp->beginTransaction();
 while ( $redirect = $page_redirects->fetch(PDO::FETCH_NUM)) {
 	$redirect_post_insert->execute(Array(
-		"post_name" => $redirect[0]
+		"post_name" => md5('/' . $redirect[0]),
+		"post_title" => '/' . $redirect[0],
+		"post_parent" => null,
+		"post_excerpt" => '/' . $redirect[1],
 	));
-	$redirects[$wp->lastInsertId()] = Array( 
-		'src' => $redirect[0],
-		'dst' => $redirect[1]
-	);
 }
 $wp->commit();
 
@@ -141,12 +140,11 @@ $page_redirects->execute();
 $wp->beginTransaction();
 while ( $redirect = $page_redirects->fetch(PDO::FETCH_NUM)) {
 	$redirect_post_insert->execute(Array(
-		"post_name" => $redirect[0]
+		"post_name" => md5('/' . $redirect[0]),
+		"post_title" => '/' . $redirect[0],
+		"post_parent" => null,
+		"post_excerpt" => '/' . $redirect[1],
 	));
-	$redirects[$wp->lastInsertId()] = Array( 
-		'src' => $redirect[0],
-		'dst' => $redirect[1]
-	);
 }
 $wp->commit();
 
@@ -182,37 +180,10 @@ $month_redirects->execute();
 $wp->beginTransaction();
 while ( $redirect = $month_redirects->fetch(PDO::FETCH_ASSOC)) {
 	$redirect_post_insert->execute(Array(
-		"post_name" => $redirect['dst']
-	));
-	$redirects[$wp->lastInsertId()] = Array( 
-		'src' => $redirect['dst'],
-		'dst' => '/?p=' . $redirect['nid'],
-	);
-}
-$wp->commit();
-
-$redirect_postmeta_insert = $wp->prepare("
-INSERT IGNORE INTO pantheon_wp.wp_postmeta (post_id, meta_key, meta_value)
-VALUES ( ?, ?, ? )
-;
-");
-
-$wp->beginTransaction();
-foreach ( $redirects as $id => $redirect ) {
-	$redirect_postmeta_insert->execute(Array(
-		$id,
-		'_redirect_rule_from',
-		$redirect['src']
-	));
-	$redirect_postmeta_insert->execute(Array(
-		$id,
-		'_redirect_rule_to',
-		$redirect['dst']
-	));
-	$redirect_postmeta_insert->execute(Array(
-		$id,
-		'_redirect_rule_status_code',
-		'301'
+		"post_name" => md5('/' . $redirect['dst']),
+		"post_title" => '/' . $redirect['dst'],
+		"post_parent" => '/' . $redirect['nid'],
+		"post_excerpt" => null,
 	));
 }
 $wp->commit();

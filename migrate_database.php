@@ -776,23 +776,39 @@ foreach ($toc_sub_pages as $page) {
 $wp->commit();
 
 $redirect_item_insert = $wp->prepare('
-INSERT INTO wp_redirection_items
-(url, last_access, group_id, action_type, action_code, action_data, match_type)
+INSERT IGNORE INTO pantheon_wp.wp_posts
+(post_author, post_date, post_date_gmt, post_content, post_title, post_excerpt,
+post_name, to_ping, pinged, post_modified, post_modified_gmt,
+post_content_filtered, post_type, `post_status`, post_parent, post_mime_type)
 VALUES (
-?, # source
-FROM_UNIXTIME("1970-1-1 00:00:00"), #last access
 1,
-"url", #action type
-301, # action code
-"/", #destination action data
-"url" #match type
+FROM_UNIXTIME("1970-1-1 00:00:00"),
+CONVERT_TZ(FROM_UNIXTIME("1970-1-1 00:00:00"), "PST8PDT","UTC"),
+"",
+"",
+:post_title, #from not hashed
+:post_excerpt, # to url
+:post_name, #from hashed md5
+"",
+"",
+FROM_UNIXTIME("1970-1-1 00:00:00"),
+CONVERT_TZ(FROM_UNIXTIME("1970-1-1 00:00:00"), "PST8PDT","UTC"),
+"",
+"vip-legacy-redirect",
+"publish",
+:post_parent, # to as post id
+""
 )
 ;');
 
 $wp->beginTransaction();
 foreach ($redirects_needed as $dst) {
+  $dst = '/' . $dst;
   $redirect_item_insert->execute(Array(
-    $dst
+		"post_name" => md5($dst),
+		"post_title" => $dst,
+		"post_parent" => null,
+		"post_excerpt" => '/',
   ));
 }
 $wp->commit();
