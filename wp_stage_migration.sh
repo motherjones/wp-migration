@@ -33,15 +33,16 @@ mysql -u root -p"$SQL_PASS" mjd6 < prod-motherjones_d6-motherjones_d6-$YYYY-$MM-
 echo "prod db pushed into database"
 echo "\n"
 
-php migrate_links.php "$SQL_PASS" #redirects must be in place for toc pages in migrate, below
-
-echo "redirects added to wp db"
-echo "\n"
-
 
 php migrate_database.php "$SQL_PASS"
 
 echo "most stuff addded to wp db"
+echo "\n"
+
+
+php migrate_redirect.php "$SQL_PASS" #redirects must be in place for toc pages in migrate, below
+
+echo "redirects added to wp db"
 echo "\n"
 
 
@@ -99,3 +100,4 @@ rsync -rtvzl --ignore-existing --chmod=ug+rwX -e "ssh -i /home/bbreedlove/.ssh/i
 find $FILES_DIR -exec ./rename_files.bash  {} \;
 
 tar -zcvf files-$YYYY-$MM-$DD.sql.gz $FILES_DIR
+tar -zcvf migrated-wp-db-$YYYY-$MM-$DD.sql.gz migrated-wp-db-$YYYY-$MM-$DD.sql
