@@ -99,5 +99,5 @@ rsync -rtvzl --ignore-existing --chmod=ug+rwX -e "ssh -i /home/bbreedlove/.ssh/i
 
 find $FILES_DIR -exec ./rename_files.bash  {} \;
 
-tar -zcvf files-$YYYY-$MM-$DD.sql.gz $FILES_DIR
+tar -zcvf files-$YYYY-$MM-$DD.sql.gz -C $FILES_DIR .
 tar -zcvf migrated-wp-db-$YYYY-$MM-$DD.sql.gz migrated-wp-db-$YYYY-$MM-$DD.sql
