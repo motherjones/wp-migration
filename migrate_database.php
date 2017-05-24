@@ -68,9 +68,45 @@ function sanitize_file_name( $filename ) {
 	return $filename;
 }
 
+function deleteNode($node) {
+	deleteChildren($node);
+	$parent = $node->parentNode;
+	return $parent->removeChild($node);
+}
+
+function deleteChildren($node) {
+	while (isset($node->firstChild)) {
+		deleteChildren($node->firstChild);
+		$node->removeChild($node->firstChild);
+	}
+}
+
 function fix_post_body($html) {
+	if (!$html) {return;}
 	$dom = new DOMDocument;
 	$dom->loadHTML($html);
+	$doc = $dom->documentElement;
+	$divs = $doc->getElementsByTagName('div');
+	foreach ($divs as $div) {
+		if (!$div->hasAttribute('data-episode-id')) { continue; }
+		$remove_list = Array();
+		$scripts = $doc->getElementsByTagName('script');
+		foreach ($scripts as $script) {
+			$remove_list []= $script;
+		}
+		$styles = $doc->getElementsByTagName('link');
+		foreach ($styles as $style) {
+			$remove_list []= $style;
+		}
+		foreach ($remove_list as $node) {
+			deleteNode($node);
+		}
+		$short = $dom->createElement('span', '[podcast episode="' 
+			. $div->getAttribute('data-episode-id')
+			. '"]');
+		print "removed " . $div->getAttribute('data-episode-id') . "\n";
+		$div->parentNode->replaceChild($short, $div);
+	}
 	$images = $dom->getElementsByTagName('img');
 	foreach ($images as $image) {
 		$src = $image->getAttribute('src');
