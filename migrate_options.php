@@ -90,7 +90,7 @@ $wp->commit();
 $active_plugins = Array(
   'multiple-post-thumbnails/multi-post-thumbnails.php',
   'co-authors-plus/co-authors-plus.php',
-  'redirection/redirection.php',
+  'safe-redirect-manager/safe-redirect-manager.php',
   'zoninator/zoninator.php',
   'fb-instant-articles/facebook-instant-articles.php',
   'WPCOM-Legacy-Redirector/wpcom-legacy-redirector.php',
