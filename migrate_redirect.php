@@ -187,3 +187,83 @@ while ( $redirect = $month_redirects->fetch(PDO::FETCH_ASSOC)) {
 	));
 }
 $wp->commit();
+
+
+// now do the stuff where we need the wildcards
+$redirect_post_insert = $wp->prepare('
+insert ignore into pantheon_wp.wp_posts
+(post_author, post_date, post_date_gmt, post_content, post_title, post_excerpt,
+post_name, to_ping, pinged, post_modified, post_modified_gmt,
+post_content_filtered, post_type, `post_status`, post_parent, post_mime_type)
+values (
+1,
+from_unixtime("1970-1-1 00:00:00"),
+convert_tz(from_unixtime("1970-1-1 00:00:00"), "pst8pdt","utc"),
+"",
+"auto draft", #post title
+"",
+:post_name, #post name
+"",
+"",
+from_unixtime("1970-1-1 00:00:00"),
+convert_tz(from_unixtime("1970-1-1 00:00:00"), "pst8pdt","utc"),
+"",
+"redirect_rule",
+"publish",
+0, # to as post id
+""
+)
+;
+');
+$wp->beginTransaction();
+$redirect_post_insert->execute(array(
+	"post_name" => 'node-to-post',
+));
+$node_to_post = $wp->lastInsertId();
+
+$redirect_post_insert->execute(array(
+	"post_name" => 'rss-feeds',
+));
+$rss_feeds = $wp->lastInsertId();
+$wp->commit();
+
+
+$meta_insert = $wp->prepare('
+INSERT IGNORE INTO pantheon_wp.wp_postmeta
+(post_id, meta_key, meta_value)
+VALUES (?, ?, ?)
+;
+');
+$wp->beginTransaction();
+$meta_insert->execute(array(
+	$node_to_post,
+	'_redirect_rule_from',
+	'/node/*',
+));
+$meta_insert->execute(array(
+	$node_to_post,
+	'_redirect_rule_to',
+	'/?p=*',
+));
+$meta_insert->execute(array(
+	$node_to_post,
+	'_redirect_rule_status_code',
+	'302',
+));
+
+$meta_insert->execute(array(
+	$rss_feeds,
+	'_redirect_rule_from',
+	'/rss/sections/*/feed',
+));
+$meta_insert->execute(array(
+	$rss_feeds,
+	'_redirect_rule_to',
+	'/category/*/feed',
+));
+$meta_insert->execute(array(
+	$rss_feeds,
+	'_redirect_rule_status_code',
+	'302',
+));
+$wp->commit();
