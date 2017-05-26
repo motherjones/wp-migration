@@ -9,9 +9,9 @@ $FILEDIR_ABS = "http://dev-mjwordpress.pantheonsite.io/wp-content/uploads/";
 $FILEDIR = "";
 
 
-$d6 = new PDO("mysql:host=$hostname;dbname=$d6_db", $username, $password);
-
 $wp = new PDO("mysql:host=$hostname;dbname=$wp_db", $username, $password);
+
+$d6 = new PDO("mysql:host=$hostname;dbname=$d6_db", $username, $password);
 
 // Yanked directly from wp
 function sanitize_file_name( $filename ) {
@@ -281,6 +281,13 @@ TRUNCATE pantheon_wp.wp_term_relationships;
 SET GROUP_CONCAT_MAX_LEN = 1073741824;
 ');
 $wp->commit();
+
+$d6->beginTransaction();
+$d6->exec('
+SET GLOBAL max_allowed_packet=1024*1024*50;
+SET @@session.group_concat_max_len = @@global.max_allowed_packet;
+');
+$d6->commit();
 
 
 $term_insert_data = $d6->prepare('
