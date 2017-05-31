@@ -34,6 +34,11 @@ $option_replace->execute(Array('template', 'motherjones'));
 $option_replace->execute(Array('stylesheet', 'motherjones'));
 $wp->commit();
 
+// set timezone
+$wp->beginTransaction();
+$option_replace->execute(Array('timezone_string', 'America/New_York'));
+$wp->commit();
+
 // set posts per page
 $wp->beginTransaction();
 $option_replace->execute(Array('posts_per_page', 20));

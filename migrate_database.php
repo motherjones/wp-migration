@@ -1,5 +1,7 @@
 <?php
 
+#ini_set('memory_limit', '-1');
+#$hostname="127.0.0.1";
 $hostname="localhost";
 $username="root";
 $password=$argv[1];
@@ -444,7 +446,7 @@ SELECT DISTINCT
 n.nid,
 n.uid,
 FROM_UNIXTIME(p.published_at),
-CONVERT_TZ(FROM_UNIXTIME(p.published_at), 'PST8PDT','UTC'),
+CONVERT_TZ(FROM_UNIXTIME(p.published_at), 'America/New_York','UTC'),
 r.body,
 n.title,
 d.field_dek_value,
@@ -458,7 +460,7 @@ IF(
 '',
 '',
 FROM_UNIXTIME(n.changed),
-CONVERT_TZ(FROM_UNIXTIME(n.changed), 'PST8PDT','UTC'),
+CONVERT_TZ(FROM_UNIXTIME(n.changed), 'America/New_York','UTC'),
 '',
 n.type,
 IF(n.status = 1, 'publish', 'draft'),
@@ -500,7 +502,7 @@ SELECT DISTINCT
 n.nid,
 n.uid,
 FROM_UNIXTIME(p.published_at),
-CONVERT_TZ(FROM_UNIXTIME(p.published_at), 'PST8PDT','UTC'),
+CONVERT_TZ(FROM_UNIXTIME(p.published_at), 'America/New_York','UTC'),
 r.body,
 n.title,
 r.teaser,
@@ -509,7 +511,7 @@ r.teaser,
 '',
 '',
 FROM_UNIXTIME(n.changed),
-CONVERT_TZ(FROM_UNIXTIME(n.changed), 'PST8PDT','UTC'),
+CONVERT_TZ(FROM_UNIXTIME(n.changed), 'America/New_York','UTC'),
 '',
 n.type,
 IF(n.status = 1, 'publish', 'draft'),
@@ -537,7 +539,7 @@ SELECT DISTINCT
 n.nid,
 n.uid,
 FROM_UNIXTIME(p.published_at),
-CONVERT_TZ(FROM_UNIXTIME(p.published_at), 'PST8PDT','UTC'),
+CONVERT_TZ(FROM_UNIXTIME(p.published_at), 'America/New_York','UTC'),
 r.body,
 n.title,
 r.teaser,
@@ -552,7 +554,7 @@ REPLACE(
 '',
 '',
 FROM_UNIXTIME(n.changed),
-CONVERT_TZ(FROM_UNIXTIME(n.changed), 'PST8PDT','UTC'),
+CONVERT_TZ(FROM_UNIXTIME(n.changed), 'America/New_York','UTC'),
 '',
 n.type,
 IF(n.status = 1, 'publish', 'draft'),
@@ -583,7 +585,7 @@ SELECT DISTINCT
 n.nid,
 n.uid,
 FROM_UNIXTIME(p.published_at),
-CONVERT_TZ(FROM_UNIXTIME(p.published_at), 'PST8PDT','UTC'),
+CONVERT_TZ(FROM_UNIXTIME(p.published_at), 'America/New_York','UTC'),
 r.body,
 n.title,
 r.teaser,
@@ -598,7 +600,7 @@ REPLACE(
 '',
 '',
 FROM_UNIXTIME(n.changed),
-CONVERT_TZ(FROM_UNIXTIME(n.changed), 'PST8PDT','UTC'),
+CONVERT_TZ(FROM_UNIXTIME(n.changed), 'America/New_York','UTC'),
 '',
 n.type,
 IF(n.status = 1, 'publish', 'draft'),
@@ -676,11 +678,11 @@ post_name, to_ping, pinged, post_modified, post_modified_gmt,
 post_content_filtered, post_type, `post_status`, `post_parent`)
 VALUES (?,
 FROM_UNIXTIME(?),
-CONVERT_TZ(FROM_UNIXTIME(?), "PST8PDT","UTC"),
+CONVERT_TZ(FROM_UNIXTIME(?), "America/New_York","UTC"),
  ?, ?, ?,
 ?, ?, ?,
 FROM_UNIXTIME(?),
-CONVERT_TZ(FROM_UNIXTIME(?), "PST8PDT","UTC"),
+CONVERT_TZ(FROM_UNIXTIME(?), "America/New_York","UTC"),
 ?, ?, ?, ?)
 ');
 
@@ -776,7 +778,7 @@ foreach ($toc_magazine_pages as $date => $page) {
   $page_insert->execute(Array(
     $page['uid'], #post author
     $page['FROM_UNIXTIME(p.published_at)'], //posted
-    'CONVERT_TZ(' . $page['FROM_UNIXTIME(p.published_at)'] . ', "PST8PDT","UTC")', //posted
+    'CONVERT_TZ(' . $page['FROM_UNIXTIME(p.published_at)'] . ', "America/New_York","UTC")', //posted
     $page['body'], //body
     $page['title'], //title
     $page['teaser'], //post_excerpt
@@ -784,7 +786,7 @@ foreach ($toc_magazine_pages as $date => $page) {
     '', //to ping
     '', //pinged
     $page['FROM_UNIXTIME(n.changed)'], //posted
-    'CONVERT_TZ(' . $page['FROM_UNIXTIME(n.changed)'] . ', "PST8PDT","UTC")', //posted
+    'CONVERT_TZ(' . $page['FROM_UNIXTIME(n.changed)'] . ', "America/New_York","UTC")', //posted
     '', //post content filtered
     'page', //type
     $page["IF(n.status = 1, 'publish', 'draft')"], //pub status
@@ -801,7 +803,7 @@ foreach ($toc_sub_pages as $page) {
   $page_insert->execute(Array(
     $page['uid'], #post author
     $page['FROM_UNIXTIME(p.published_at)'], //posted
-    'CONVERT_TZ(' . $page['FROM_UNIXTIME(p.published_at)'] . ', "PST8PDT","UTC")', //posted
+    'CONVERT_TZ(' . $page['FROM_UNIXTIME(p.published_at)'] . ', "America/New_York","UTC")', //posted
     $page['body'], //body
     $page['title'], //title
     $page['teaser'], //post_excerpt
@@ -809,7 +811,7 @@ foreach ($toc_sub_pages as $page) {
     '', //to ping
     '', //pinged
     $page['FROM_UNIXTIME(n.changed)'], //posted
-    'CONVERT_TZ(' . $page['FROM_UNIXTIME(n.changed)'] . ', "PST8PDT","UTC")', //posted
+    'CONVERT_TZ(' . $page['FROM_UNIXTIME(n.changed)'] . ', "America/New_York","UTC")', //posted
     '', //post content filtered
     'page', //type
     $page["IF(n.status = 1, 'publish', 'draft')"], //pub status
@@ -826,7 +828,7 @@ post_content_filtered, post_type, `post_status`, post_parent, post_mime_type)
 VALUES (
 1,
 FROM_UNIXTIME("1970-1-1 00:00:00"),
-CONVERT_TZ(FROM_UNIXTIME("1970-1-1 00:00:00"), "PST8PDT","UTC"),
+CONVERT_TZ(FROM_UNIXTIME("1970-1-1 00:00:00"), "America/New_York","UTC"),
 "",
 "",
 :post_title, #from not hashed
@@ -835,7 +837,7 @@ CONVERT_TZ(FROM_UNIXTIME("1970-1-1 00:00:00"), "PST8PDT","UTC"),
 "",
 "",
 FROM_UNIXTIME("1970-1-1 00:00:00"),
-CONVERT_TZ(FROM_UNIXTIME("1970-1-1 00:00:00"), "PST8PDT","UTC"),
+CONVERT_TZ(FROM_UNIXTIME("1970-1-1 00:00:00"), "America/New_York","UTC"),
 "",
 "vip-legacy-redirect",
 "publish",
@@ -1568,7 +1570,7 @@ post_content_filtered, post_type, `post_status`, post_parent, post_mime_type)
 VALUES (
 :post_author,
 FROM_UNIXTIME("1970-1-1 00:00:00"),
-CONVERT_TZ(FROM_UNIXTIME("1970-1-1 00:00:00"), "PST8PDT","UTC"),
+CONVERT_TZ(FROM_UNIXTIME("1970-1-1 00:00:00"), "America/New_York","UTC"),
 "",
 :post_title,
 "",
@@ -1576,7 +1578,7 @@ CONVERT_TZ(FROM_UNIXTIME("1970-1-1 00:00:00"), "PST8PDT","UTC"),
 "",
 "",
 FROM_UNIXTIME("1970-1-1 00:00:00"),
-CONVERT_TZ(FROM_UNIXTIME("1970-1-1 00:00:00"), "PST8PDT","UTC"),
+CONVERT_TZ(FROM_UNIXTIME("1970-1-1 00:00:00"), "America/New_York","UTC"),
 :guid,
 "",
 "attachment",
@@ -1693,7 +1695,7 @@ post_content_filtered, post_type, `post_status`, post_parent, post_mime_type)
 VALUES (
 :post_author,
 FROM_UNIXTIME(:post_date), #post date
-CONVERT_TZ(FROM_UNIXTIME(:post_date), "PST8PDT","UTC"),
+CONVERT_TZ(FROM_UNIXTIME(:post_date), "America/New_York","UTC"),
 "", #post content (description)
 :post_title,
 :post_excerpt,
@@ -1701,7 +1703,7 @@ CONVERT_TZ(FROM_UNIXTIME(:post_date), "PST8PDT","UTC"),
 "",
 "",
 FROM_UNIXTIME(:post_modified),
-CONVERT_TZ(FROM_UNIXTIME(:post_modified), "PST8PDT","UTC"),
+CONVERT_TZ(FROM_UNIXTIME(:post_modified), "America/New_York","UTC"),
 :guid,
 "",
 "attachment",
@@ -1832,7 +1834,7 @@ post_content_filtered, post_type, `post_status`, post_parent, post_mime_type)
 VALUES (
 :post_author,
 FROM_UNIXTIME(:post_date),
-CONVERT_TZ(FROM_UNIXTIME(:post_date), "PST8PDT","UTC"),
+CONVERT_TZ(FROM_UNIXTIME(:post_date), "America/New_York","UTC"),
 "",
 :post_title,
 "",
@@ -1840,7 +1842,7 @@ CONVERT_TZ(FROM_UNIXTIME(:post_date), "PST8PDT","UTC"),
 "",
 "",
 FROM_UNIXTIME(:post_modified),
-CONVERT_TZ(FROM_UNIXTIME(:post_modified), "PST8PDT","UTC"),
+CONVERT_TZ(FROM_UNIXTIME(:post_modified), "America/New_York","UTC"),
 :guid,
 "",
 "attachment",
@@ -1953,7 +1955,7 @@ post_content_filtered, post_type, `post_status`, post_parent, post_mime_type)
 VALUES (
 :post_author,
 FROM_UNIXTIME(:post_date),
-CONVERT_TZ(FROM_UNIXTIME(:post_date), "PST8PDT","UTC"),
+CONVERT_TZ(FROM_UNIXTIME(:post_date), "America/New_York","UTC"),
 "",
 :post_title,
 "",
@@ -1961,7 +1963,7 @@ CONVERT_TZ(FROM_UNIXTIME(:post_date), "PST8PDT","UTC"),
 "",
 "",
 FROM_UNIXTIME(:post_modified),
-CONVERT_TZ(FROM_UNIXTIME(:post_modified), "PST8PDT","UTC"),
+CONVERT_TZ(FROM_UNIXTIME(:post_modified), "America/New_York","UTC"),
 :guid,
 "",
 "attachment",
