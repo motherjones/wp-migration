@@ -1671,15 +1671,15 @@ f.filemime,
 f.filepath,
 f.filename
 FROM mjd6.node n
-INNER JOIN mjd6.content_field_master_image i
+LEFT JOIN mjd6.content_field_master_image i
 USING(vid)
-INNER JOIN mjd6.content_field_master_image_caption c
+LEFT JOIN mjd6.content_field_master_image_caption c
 USING(vid)
-INNER JOIN mjd6.content_field_art_byline b
+LEFT JOIN mjd6.content_field_art_byline b
 USING(vid)
-INNER JOIN mjd6.content_field_suppress_master_image s
+LEFT JOIN mjd6.content_field_suppress_master_image s
 USING(vid)
-INNER JOIN mjd6.files f
+LEFT JOIN mjd6.files f
 ON(i.field_master_image_fid = f.fid)
 JOIN mjd6.publication_date p
 ON n.nid = p.nid
