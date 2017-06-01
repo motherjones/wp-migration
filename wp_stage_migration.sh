@@ -97,7 +97,7 @@ rsync -rtvzl --ignore-existing --chmod=ug+rwX -e "ssh -i /home/bbreedlove/.ssh/i
   motherjones_d6.prod@web-197.prod.hosting.acquia.com:/mnt/files/motherjones_d6/files/ \
   $FILES_DIR
 
-find $FILES_DIR -exec ./rename_files.bash  {} \;
+wp vip-motherjones sanitize-filenames
 
 tar -zcvf files-$YYYY-$MM-$DD.tar.gz -C $FILES_DIR .
 tar -zcvf migrated-wp-db-$YYYY-$MM-$DD.sql.tar.gz migrated-wp-db-$YYYY-$MM-$DD.sql

@@ -128,9 +128,17 @@ function fix_post_body($html) {
 }
 
 function sanititize_file_in_url( $filepath ) {
-	if ( preg_match('/^(.*\/)(.+)$/', $filepath, $matches) ) {
-		$file = sanitize_file_name(urldecode($matches[2])); //ha matches 0 is the whole thing of course
-		$filepath = $matches[1] . urlencode($file);
+	if ( preg_match('/^(.*)(\/.*\/)(.+)$/', $filepath, $matches) ) {
+		$file = sanitize_file_name(urldecode($matches[3])); //ha matches 0 is the whole thing of course
+    $dir_array = explode('/', $matches[2]);
+    $dir = '';
+    foreach ($dir_array as $dir_frag) {
+      if (!$dir) { $dir .= '/'; }
+      if($dir_frag) {
+        $dir .= urlencode(sanitize_file_name(urldecode($dir_frag))) . '/';
+      }
+    }
+		$filepath = $matches[1] . $dir . urlencode($file);
 	} else {
 		$filepath = sanitize_file_name($filepath);
 	}
