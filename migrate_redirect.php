@@ -10,6 +10,14 @@ $d6 = new PDO("mysql:host=$hostname;dbname=$d6_db", $username, $password);
 
 $wp = new PDO("mysql:host=$hostname;dbname=$wp_db", $username, $password);  
 
+function fix_dest($url) {
+  $components = parse_url($url);    
+  if (!empty($components['host']) || preg_match('/^\//', $url)) {
+	return $url;
+  }
+  return '/' . $url;
+}
+
 //GET LEGACY REDIRECTS
 $legacy_redirects = $d6->prepare('
 SELECT
@@ -50,11 +58,13 @@ $redirects = Array();
 
 $wp->beginTransaction();
 while ( $redirect = $legacy_redirects->fetch(PDO::FETCH_ASSOC)) {
+	$src = fix_dest($redirect['src']);
+	$dst = fix_dest($redirect['dst']);
 	$redirect_post_insert->execute(Array(
-		"post_name" => md5('/' . $redirect['src']),
-		"post_title" => '/' . $redirect['src'],
+		"post_name" => md5($src),
+		"post_title" => $src,
 		"post_parent" => null,
-		"post_excerpt" => '/' . $redirect['dst'],
+		"post_excerpt" => $dst,
 	));
 }
 $wp->commit();
@@ -70,11 +80,13 @@ $manual_redirects->execute();
 
 $wp->beginTransaction();
 while ( $redirect = $manual_redirects->fetch(PDO::FETCH_ASSOC)) {
+	$src = fix_dest($redirect['source']);
+	$dst = fix_dest($redirect['redirect']);
 	$redirect_post_insert->execute(Array(
-		"post_name" => md5('/' . $redirect['source']),
-		"post_title" => '/' . $redirect['source'],
+		"post_name" => md5($src),
+		"post_title" => $src,
 		"post_parent" => null,
-		"post_excerpt" => '/' . $redirect['redirect'],
+		"post_excerpt" => $dst,
 	));
 }
 $wp->commit();
@@ -104,11 +116,13 @@ AND n.status = 1
 $page_redirects->execute();
 $wp->beginTransaction();
 while ( $redirect = $page_redirects->fetch(PDO::FETCH_NUM)) {
+	$src = fix_dest($redirect[0]);
+	$dst = fix_dest($redirect[1]);
 	$redirect_post_insert->execute(Array(
-		"post_name" => md5('/' . $redirect[0]),
-		"post_title" => '/' . $redirect[0],
+		"post_name" => md5($src),
+		"post_title" => $src,
 		"post_parent" => null,
-		"post_excerpt" => '/' . $redirect[1],
+		"post_excerpt" => $dst,
 	));
 }
 $wp->commit();
@@ -139,11 +153,13 @@ AND n.status = 1
 $page_redirects->execute();
 $wp->beginTransaction();
 while ( $redirect = $page_redirects->fetch(PDO::FETCH_NUM)) {
+	$src = fix_dest($redirect[0]);
+	$dst = fix_dest($redirect[1]);
 	$redirect_post_insert->execute(Array(
-		"post_name" => md5('/' . $redirect[0]),
-		"post_title" => '/' . $redirect[0],
+		"post_name" => md5($src),
+		"post_title" => $src,
 		"post_parent" => null,
-		"post_excerpt" => '/' . $redirect[1],
+		"post_excerpt" => $dst,
 	));
 }
 $wp->commit();
@@ -179,10 +195,11 @@ $month_redirects->execute();
 
 $wp->beginTransaction();
 while ( $redirect = $month_redirects->fetch(PDO::FETCH_ASSOC)) {
+	$src = fix_dest($redirect['dst']);
 	$redirect_post_insert->execute(Array(
-		"post_name" => md5('/' . $redirect['dst']),
-		"post_title" => '/' . $redirect['dst'],
-		"post_parent" => '/' . $redirect['nid'],
+		"post_name" => md5($src),
+		"post_title" => $src,
+		"post_parent" => $redirect['nid'],
 		"post_excerpt" => null,
 	));
 }
@@ -198,7 +215,7 @@ post_content_filtered, post_type, `post_status`, post_parent, post_mime_type)
 values (
 1,
 from_unixtime("1970-1-1 00:00:00"),
-convert_tz(from_unixtime("1970-1-1 00:00:00"), "pst8pdt","utc"),
+convert_tz(from_unixtime("1970-1-1 00:00:00"), "America/New_York","utc"),
 "",
 "auto draft", #post title
 "",
@@ -206,7 +223,7 @@ convert_tz(from_unixtime("1970-1-1 00:00:00"), "pst8pdt","utc"),
 "",
 "",
 from_unixtime("1970-1-1 00:00:00"),
-convert_tz(from_unixtime("1970-1-1 00:00:00"), "pst8pdt","utc"),
+convert_tz(from_unixtime("1970-1-1 00:00:00"), "America/New_York","utc"),
 "",
 "redirect_rule",
 "publish",
