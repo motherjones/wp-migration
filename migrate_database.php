@@ -478,7 +478,7 @@ INNER JOIN mjd6.node_revisions r
 USING(vid)
 LEFT OUTER JOIN mjd6.url_alias a
 ON a.src = CONCAT('node/', n.nid)
-JOIN mjd6.publication_date p
+LEFT JOIN mjd6.publication_date p
 ON n.nid = p.nid
 INNER JOIN mjd6.content_field_dek d
 ON n.nid = d.nid
