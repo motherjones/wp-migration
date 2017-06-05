@@ -1,8 +1,8 @@
 <?php
 
-ini_set('memory_limit', '-1');
+#ini_set('memory_limit', '-1');
+#$hostname="127.0.0.1";
 $hostname="localhost";
-$hostname="127.0.0.1";
 $username="root";
 $password=$argv[1];
 $d6_db = "mjd6";
