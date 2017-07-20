@@ -118,6 +118,7 @@ function fix_post_body($html) {
 		$matches = Array();
 
 		$clean = sanititize_file_in_url($src);
+		$clean = preg_replace( '/^\/files\//', '/wp-content/uploads/', $clean );
 		if ($src !== $clean) {
 			$image->setAttribute('src', $clean);
 			print $src . ' is now ' . $clean . "\n\r";
